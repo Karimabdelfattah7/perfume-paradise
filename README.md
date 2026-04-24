@@ -47,7 +47,13 @@ A fully custom e-commerce website built for Perfume Paradise, a fragrance retail
 
 ## Note on Source Code
 
-This is a client project for an active retail business. The JavaScript source files (`js/`) contain proprietary business logic — product catalog data, payment integration, and cart logic — and are not included in this public repository.
+This is a client project for an active retail business. To protect the store's operations and security, the following are intentionally excluded from this public repository:
+
+- **`js/data.js`** — Product catalog data (pricing, inventory, listings)
+- **`js/cart.js`** — Cart and order management logic
+- **`js/clover-api.js`** — Payment processing integration (Clover POS credentials and API calls)
+- **`js/main.js`** — Site-wide UI and interaction logic
+- **All inline JavaScript** — Page-level business logic has been removed from the HTML files
 
 The HTML structure and CSS design system are available here to demonstrate the layout architecture and front-end craft. Full source is available upon request for verified opportunities.
 

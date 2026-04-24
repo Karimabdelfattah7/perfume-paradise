@@ -156,52 +156,7 @@
   <script src="js/main.js"></script>
   <script src="js/clover-api.js"></script>
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const raw = sessionStorage.getItem('pp_order');
-
-      // Fallback if accessed directly (no order in session)
-      if (!raw) {
-        document.getElementById('orderNum').textContent = 'N/A';
-        return;
-      }
-
-      const order = JSON.parse(raw);
-      sessionStorage.removeItem('pp_order');
-
-      document.getElementById('orderNum').textContent = order.orderId;
-      document.getElementById('confirmEmail').textContent = order.customer?.email || 'your email';
-
-      // Show correct next-steps block
-      if (order.customer?.delivery === 'shipping') {
-        document.getElementById('nextStepsPickup').classList.add('hidden');
-        document.getElementById('nextStepsShipping').classList.remove('hidden');
-      }
-
-      // Render items
-      const container = document.getElementById('confirmItems');
-      (order.items || []).forEach(item => {
-        const el = document.createElement('div');
-        el.className = 'order-item';
-        el.innerHTML = `
-          <div style="width:56px;height:56px;border-radius:4px;background:var(--color-gold-pale);flex-shrink:0;position:relative">
-            <img src="${item.image || ''}" alt="${item.name}"
-              style="width:100%;height:100%;object-fit:cover;border-radius:4px"
-              onerror="this.style.display='none'">
-            <span class="order-item-qty-badge">${item.qty}</span>
-          </div>
-          <div class="order-item-details">
-            <div class="order-item-name">${item.name}</div>
-            <div class="order-item-meta">${item.brand}${item.size ? ' · ' + item.size : ''}</div>
-          </div>
-          <div class="order-item-price">${formatPrice(item.price * item.qty)}</div>
-        `;
-        container.appendChild(el);
-      });
-
-      document.getElementById('confirmTotal').textContent = formatPrice(order.subtotal || 0);
-    });
+  <!-- Business logic handled by js/ modules — source available upon request -->
   </script>
 </body>
 </html>
