@@ -1,4 +1,4 @@
-# Perfume Paradise 🌸
+# Perfume Paradise 
 
 **Luxury fragrances for every occasion — Name Brand for Less**
 
