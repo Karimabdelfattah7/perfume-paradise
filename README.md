@@ -6,7 +6,11 @@ A fully custom e-commerce website built for Perfume Paradise, a fragrance retail
 
 ---
 
-![Perfume Paradise Website](preview.jpg)
+### Homepage
+![Perfume Paradise — Homepage](preview.png)
+
+### Shop / Product Catalog
+![Perfume Paradise — Shop Page](preview-shop.png)
 
 ---
 
