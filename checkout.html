@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Perfume Paradise</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-body">
+
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-name">Perfume Paradise</span>
+        <span class="logo-tagline">Name Brand for Less</span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="policy.html">Our Store</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" data-cart-toggle aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/></svg>
+          <span class="cart-badge hidden">0</span>
+        </button>
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mobile-menu" id="mobileMenu">
+    <div class="mobile-nav">
+      <a href="index.html">Home</a>
+      <a href="products.html">Shop All Fragrances</a>
+      <a href="policy.html">Our Store</a>
+    </div>
+  </nav>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-subtotal">
+        <span class="label">Subtotal</span>
+        <span class="amount" id="cartSubtotal">$0.00</span>
+      </div>
+      <p class="cart-note">Taxes calculated at checkout</p>
+      <button onclick="CartUI.close()" class="btn btn-ghost btn-block">Continue Shopping</button>
+    </div>
+  </aside>
+
+  <!-- Search overlay (minimal, no search on checkout) -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-box">
+      <div class="search-input-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/></svg>
+        <input type="search" id="searchInput" placeholder="Search fragrances…" autocomplete="off">
+        <button class="search-close" id="searchClose" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="index.html">Home</a><span>/</span>
+          <a href="products.html">Shop</a><span>/</span>
+          <span aria-current="page">Checkout</span>
+        </nav>
+        <h1>Checkout</h1>
+      </div>
+    </div>
+
+    <!-- Empty cart redirect -->
+    <div id="emptyCartMsg" class="hidden" style="text-align:center;padding:4rem 1rem">
+      <p style="font-size:2rem;margin-bottom:1rem">🛍️</p>
+      <h2 style="font-weight:400;margin-bottom:0.5rem">Your cart is empty</h2>
+      <p style="color:var(--color-text-muted);margin:0 auto 1.5rem">Add some fragrances before checking out.</p>
+      <a href="products.html" class="btn btn-primary">Shop Fragrances</a>
+    </div>
+
+    <section class="section-pad" id="checkoutSection">
+      <div class="container">
+        <div class="checkout-layout">
+
+          <!-- LEFT: Customer Information Form -->
+          <div>
+            <form id="checkoutForm" novalidate>
+
+              <!-- Contact -->
+              <div class="checkout-form-section">
+                <h3>Contact Information</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="firstName">First Name *</label>
+                    <input class="form-input" type="text" id="firstName" name="firstName"
+                      autocomplete="given-name" required placeholder="Jane">
+                    <span class="form-error" id="firstNameErr">Please enter your first name.</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lastName">Last Name *</label>
+                    <input class="form-input" type="text" id="lastName" name="lastName"
+                      autocomplete="family-name" required placeholder="Smith">
+                    <span class="form-error" id="lastNameErr">Please enter your last name.</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="email">Email Address *</label>
+                  <input class="form-input" type="email" id="email" name="email"
+                    autocomplete="email" required placeholder="jane@example.com">
+                  <span class="form-error" id="emailErr">Please enter a valid email address.</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="phone">Phone Number</label>
+                  <input class="form-input" type="tel" id="phone" name="phone"
+                    autocomplete="tel" placeholder="(502) 555-0100">
+                </div>
+              </div>
+
+              <!-- Shipping / Pickup -->
+              <div class="checkout-form-section">
+                <h3>Delivery Method</h3>
+
+                <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem">
+                  <label style="display:flex;align-items:center;gap:0.75rem;padding:1rem;border:1.5px solid var(--color-gold);border-radius:var(--radius-sm);cursor:pointer;background:var(--color-gold-pale)">
+                    <input type="radio" name="delivery" value="pickup" checked style="accent-color:var(--color-gold)">
+                    <div>
+                      <div style="font-weight:600;font-size:0.88rem">In-Store Pickup — Free</div>
+                      <div style="font-size:0.78rem;color:var(--color-text-muted)">Pick up at Mall St. Mathews, Louisville, KY</div>
+                    </div>
+                  </label>
+                  <label style="display:flex;align-items:center;gap:0.75rem;padding:1rem;border:1.5px solid var(--color-border);border-radius:var(--radius-sm);cursor:pointer" id="shippingOption">
+                    <input type="radio" name="delivery" value="shipping" style="accent-color:var(--color-gold)">
+                    <div>
+                      <div style="font-weight:600;font-size:0.88rem">Shipping</div>
+                      <div style="font-size:0.78rem;color:var(--color-text-muted)">Rate calculated at confirmation</div>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- Shipping address (shown when shipping selected) -->
+                <div id="shippingAddress" class="hidden">
+                  <div class="form-group">
+                    <label class="form-label" for="address">Street Address *</label>
+                    <input class="form-input" type="text" id="address" name="address"
+                      autocomplete="street-address" placeholder="123 Main St">
+                    <span class="form-error" id="addressErr">Please enter your street address.</span>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="city">City *</label>
+                      <input class="form-input" type="text" id="city" name="city"
+                        autocomplete="address-level2" placeholder="Louisville">
+                      <span class="form-error" id="cityErr">Please enter your city.</span>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="state">State</label>
+                      <input class="form-input" type="text" id="state" name="state"
+                        autocomplete="address-level1" placeholder="KY" maxlength="2">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="zip">ZIP Code *</label>
+                    <input class="form-input" type="text" id="zip" name="zip"
+                      autocomplete="postal-code" placeholder="40207" maxlength="10">
+                    <span class="form-error" id="zipErr">Please enter your ZIP code.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Note -->
+              <div class="checkout-form-section">
+                <h3>Payment</h3>
+                <!--
+                  CLOVER INTEGRATION NOTE:
+                  Replace this section with Clover's hosted payment iframe.
+                  Call CloverAPI.initPaymentForm('cloverPaymentContainer') after DOM load.
+                  See js/clover-api.js for full instructions.
+                -->
+                <div id="cloverPaymentContainer">
+                  <div style="border:1.5px dashed var(--color-border);border-radius:var(--radius-md);padding:2rem;text-align:center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:36px;height:36px;color:var(--color-gold);margin:0 auto 0.75rem;opacity:0.7"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
+                    <h4 style="font-size:0.9rem;margin-bottom:0.4rem">Secure Payment via Clover</h4>
+                    <p style="font-size:0.78rem;color:var(--color-text-muted);margin:0 auto;max-width:38ch">
+                      Payment is processed securely at pickup or via Clover once your credentials are configured.
+                      See <strong>CLOVER-SETUP-GUIDE.md</strong> to go live.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Policy reminder -->
+              <p style="font-size:0.78rem;color:var(--color-text-muted);margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:0.4rem">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px;height:14px;flex-shrink:0;margin-top:3px"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Returns or exchanges accepted within 15 days with receipt.
+                <a href="policy.html#returns" style="color:var(--color-gold);text-decoration:underline">Full policy</a>
+              </p>
+
+              <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">
+                Place Order
+              </button>
+            </form>
+          </div>
+
+          <!-- RIGHT: Order Summary -->
+          <div>
+            <div class="order-summary">
+              <h3>Order Summary</h3>
+              <div id="orderItems">
+                <!-- Populated by JS -->
+              </div>
+              <div class="order-totals">
+                <div class="total-row">
+                  <span>Subtotal</span>
+                  <span id="summarySubtotal">$0.00</span>
+                </div>
+                <div class="total-row">
+                  <span>Shipping</span>
+                  <span id="summaryShipping">Free</span>
+                </div>
+                <div class="total-row">
+                  <span>Tax</span>
+                  <span id="summaryTax">Calculated at confirmation</span>
+                </div>
+                <div class="total-row grand">
+                  <span>Total</span>
+                  <span id="summaryTotal">$0.00</span>
+                </div>
+              </div>
+
+              <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--color-border-light)">
+                <p style="font-size:0.75rem;color:var(--color-text-muted);display:flex;align-items:center;gap:0.4rem">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px;height:14px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                  All purchases are protected by our 15-day return policy.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,0.08);padding-top:1.25rem">
+        <p>&copy; <span id="year"></span> Perfume Paradise. All rights reserved.</p>
+        <a href="policy.html#returns" class="footer-policy-link">Return &amp; Exchange Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/clover-api.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (Cart.isEmpty()) {
+        document.getElementById('emptyCartMsg').classList.remove('hidden');
+        document.getElementById('checkoutSection').classList.add('hidden');
+        return;
+      }
+      renderOrderSummary();
+      initDeliveryToggle();
+      initForm();
+    });
+
+    function renderOrderSummary() {
+      const items = Cart.getItems();
+      const container = document.getElementById('orderItems');
+      container.innerHTML = '';
+
+      items.forEach(item => {
+        const wrap = document.createElement('div');
+        wrap.className = 'order-item';
+        wrap.innerHTML = `
+          <div class="order-item-img" style="width:56px;height:56px;border-radius:4px;background:var(--color-gold-pale);flex-shrink:0;position:relative">
+            <img src="${item.image || ''}" alt="${item.name}"
+              style="width:100%;height:100%;object-fit:cover;border-radius:4px"
+              onerror="this.style.display='none'">
+            <span class="order-item-qty-badge">${item.qty}</span>
+          </div>
+          <div class="order-item-details">
+            <div class="order-item-name">${item.name}</div>
+            <div class="order-item-meta">${item.brand}${item.size ? ' · ' + item.size : ''}</div>
+          </div>
+          <div class="order-item-price">${formatPrice(item.price * item.qty)}</div>
+        `;
+        container.appendChild(wrap);
+      });
+
+      const sub = Cart.getSubtotal();
+      document.getElementById('summarySubtotal').textContent = formatPrice(sub);
+      document.getElementById('summaryTotal').textContent = formatPrice(sub);
+    }
+
+    function initDeliveryToggle() {
+      const radios = document.querySelectorAll('input[name="delivery"]');
+      const shippingAddr = document.getElementById('shippingAddress');
+      const shippingLabel = document.getElementById('shippingOption');
+      const summaryShipping = document.getElementById('summaryShipping');
+
+      radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          const isShipping = radio.value === 'shipping' && radio.checked;
+          shippingAddr.classList.toggle('hidden', !isShipping);
+          summaryShipping.textContent = isShipping ? 'Calculated at confirmation' : 'Free (Pickup)';
+        });
+      });
+
+      // Style the selected radio label
+      radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          document.querySelectorAll('label[style*="border"]').forEach(lbl => {
+            lbl.style.borderColor = 'var(--color-border)';
+            lbl.style.background = '';
+          });
+          const selectedLabel = radio.closest('label');
+          if (selectedLabel) {
+            selectedLabel.style.borderColor = 'var(--color-gold)';
+            selectedLabel.style.background = 'var(--color-gold-pale)';
+          }
+        });
+      });
+    }
+
+    function initForm() {
+      const form = document.getElementById('checkoutForm');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!validateForm()) return;
+
+        const btn = document.getElementById('submitBtn');
+        btn.textContent = 'Placing Order…';
+        btn.disabled = true;
+
+        const customer = {
+          firstName: document.getElementById('firstName').value.trim(),
+          lastName:  document.getElementById('lastName').value.trim(),
+          email:     document.getElementById('email').value.trim(),
+          phone:     document.getElementById('phone').value.trim(),
+          delivery:  document.querySelector('input[name="delivery"]:checked').value
+        };
+
+        try {
+          // CLOVER INTEGRATION: createOrder sends cart to Clover Orders API
+          const result = await CloverAPI.createOrder(Cart.toCloverOrder(), customer);
+
+          // Store order info for confirmation page
+          sessionStorage.setItem('pp_order', JSON.stringify({
+            orderId: result.orderId,
+            customer,
+            items: Cart.getItems(),
+            subtotal: Cart.getSubtotal()
+          }));
+
+          Cart.clear();
+          window.location.href = 'confirmation.html';
+        } catch (err) {
+          btn.textContent = 'Place Order';
+          btn.disabled = false;
+          Toast.show('Something went wrong. Please try again.', 'error');
+        }
+      });
+    }
+
+    function validateForm() {
+      let valid = true;
+      const delivery = document.querySelector('input[name="delivery"]:checked')?.value;
+
+      const rules = [
+        { id: 'firstName', errId: 'firstNameErr', check: v => v.trim().length > 0 },
+        { id: 'lastName',  errId: 'lastNameErr',  check: v => v.trim().length > 0 },
+        { id: 'email',     errId: 'emailErr',     check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+      ];
+
+      if (delivery === 'shipping') {
+        rules.push(
+          { id: 'address', errId: 'addressErr', check: v => v.trim().length > 0 },
+          { id: 'city',    errId: 'cityErr',    check: v => v.trim().length > 0 },
+          { id: 'zip',     errId: 'zipErr',     check: v => v.trim().length >= 5 }
+        );
+      }
+
+      rules.forEach(({ id, errId, check }) => {
+        const input = document.getElementById(id);
+        const err   = document.getElementById(errId);
+        const ok    = input && check(input.value);
+        input?.classList.toggle('error', !ok);
+        err?.classList.toggle('visible', !ok);
+        if (!ok) valid = false;
+      });
+
+      return valid;
+    }
+  </script>
+</body>
+</html>

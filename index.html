@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Perfume Paradise — Luxury fragrances for every occasion. Located in Mall St. Mathews, Louisville, Kentucky.">
+  <title>Perfume Paradise | Luxury Fragrances — Louisville, KY</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-body">
+
+  <!-- ══ ANNOUNCEMENT BAR ══════════════════════════════════ -->
+  <div class="announcement-bar" id="announcementBar" role="note">
+    🎁 Free shipping on orders over $150 &nbsp;·&nbsp; 15-Day easy returns with receipt
+    <button class="announcement-close" aria-label="Dismiss">×</button>
+  </div>
+
+  <!-- ══ SITE HEADER ═══════════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+
+      <a href="index.html" class="logo" aria-label="Perfume Paradise Home">
+        <span class="logo-name">Perfume Paradise</span>
+        <span class="logo-tagline">Name Brand for Less</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html" class="active">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="products.html?category=women">For Her</a>
+        <a href="products.html?category=men">For Him</a>
+        <a href="products.html?category=unisex">Unisex</a>
+        <a href="policy.html">Our Store</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" data-search-toggle aria-label="Search products">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="wishlistBtn" aria-label="View wishlist" title="Your Wishlist" onclick="window.location.href='products.html'">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+          </svg>
+          <span class="cart-badge hidden" id="wishlistCount">0</span>
+        </button>
+        <button class="icon-btn" data-cart-toggle aria-label="Open shopping cart">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+          </svg>
+          <span class="cart-badge hidden" aria-live="polite">0</span>
+        </button>
+        <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ══ MOBILE MENU ════════════════════════════════════════════════ -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+    <div class="mobile-nav">
+      <a href="index.html">Home</a>
+      <a href="products.html">Shop All Fragrances</a>
+      <a href="products.html?category=women">For Her</a>
+      <a href="products.html?category=men">For Him</a>
+      <a href="products.html?category=unisex">Unisex</a>
+      <a href="policy.html">Our Store & Policy</a>
+    </div>
+    <a href="products.html" class="btn btn-primary btn-block">Shop Now</a>
+  </nav>
+
+  <!-- ══ SEARCH OVERLAY ════════════════════════════════════════════ -->
+  <div class="search-overlay" id="searchOverlay" role="dialog" aria-label="Search">
+    <div class="search-box">
+      <div class="search-input-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/>
+        </svg>
+        <input type="search" id="searchInput" placeholder="Search fragrances, brands, scents…" autocomplete="off">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CART DRAWER ════════════════════════════════════════════════ -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <!-- Free Shipping Progress Bar -->
+    <div class="free-shipping-bar" id="shippingBar">
+      <p class="shipping-bar-text">Spend <strong>$150 more</strong> for free shipping</p>
+      <div class="shipping-progress">
+        <div class="shipping-progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-subtotal">
+        <span class="label">Subtotal</span>
+        <span class="amount" id="cartSubtotal">$0.00</span>
+      </div>
+      <p class="cart-note">Shipping and taxes calculated at checkout</p>
+      <a href="checkout.html" class="btn btn-primary btn-block">Proceed to Checkout</a>
+      <button onclick="CartUI.close()" class="btn btn-ghost btn-block mt-2">Continue Shopping</button>
+    </div>
+  </aside>
+
+  <!-- ══ SCENT QUIZ MODAL ═══════════════════════════════════════════ -->
+  <div class="quiz-modal-overlay" id="quizOverlay">
+    <div class="quiz-modal">
+      <button class="quiz-modal-close" aria-label="Close quiz">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Progress -->
+      <div class="quiz-progress">
+        <div class="quiz-progress-dot done"></div>
+        <div class="quiz-progress-dot"></div>
+        <div class="quiz-progress-dot"></div>
+        <div class="quiz-progress-dot"></div>
+      </div>
+
+      <!-- Step 1: Gender -->
+      <div class="quiz-step active" data-step="gender">
+        <p class="quiz-question">Who are you shopping for?</p>
+        <p class="quiz-subtitle">We'll narrow down the perfect picks.</p>
+        <div class="quiz-options">
+          <div class="quiz-option" data-value="women">
+            <span class="quiz-option-emoji">👩</span>Her
+          </div>
+          <div class="quiz-option" data-value="men">
+            <span class="quiz-option-emoji">👨</span>Him
+          </div>
+          <div class="quiz-option" data-value="unisex">
+            <span class="quiz-option-emoji">🌿</span>Unisex
+          </div>
+          <div class="quiz-option" data-value="both">
+            <span class="quiz-option-emoji">💑</span>Both
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Mood -->
+      <div class="quiz-step" data-step="mood">
+        <p class="quiz-question">What's the occasion?</p>
+        <p class="quiz-subtitle">Choose the vibe you're after.</p>
+        <div class="quiz-options">
+          <div class="quiz-option" data-value="daytime">
+            <span class="quiz-option-emoji">☀️</span>Everyday / Office
+          </div>
+          <div class="quiz-option" data-value="evening">
+            <span class="quiz-option-emoji">🌙</span>Date Night / Evening
+          </div>
+          <div class="quiz-option" data-value="casual">
+            <span class="quiz-option-emoji">🌊</span>Casual / Summer
+          </div>
+          <div class="quiz-option" data-value="luxury">
+            <span class="quiz-option-emoji">✨</span>Special Occasion
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Scent Family -->
+      <div class="quiz-step" data-step="family">
+        <p class="quiz-question">Which scent speaks to you?</p>
+        <p class="quiz-subtitle">Pick the one you're drawn to most.</p>
+        <div class="quiz-options">
+          <div class="quiz-option" data-value="floral">
+            <span class="quiz-option-emoji">🌸</span>Floral
+          </div>
+          <div class="quiz-option" data-value="woody">
+            <span class="quiz-option-emoji">🌲</span>Woody / Earthy
+          </div>
+          <div class="quiz-option" data-value="oriental">
+            <span class="quiz-option-emoji">🍯</span>Warm / Oriental
+          </div>
+          <div class="quiz-option" data-value="fresh">
+            <span class="quiz-option-emoji">💧</span>Fresh / Aquatic
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Results -->
+      <div class="quiz-step" data-step="result">
+        <p class="quiz-question">Your Perfect Matches</p>
+        <p class="quiz-subtitle">Based on your answers, we recommend these fragrances.</p>
+        <div class="quiz-result-grid product-grid" id="quizResultGrid" style="grid-template-columns:1fr 1fr;gap:1rem"></div>
+        <div style="text-align:center;margin-top:1.5rem">
+          <a href="products.html" class="btn btn-secondary">View All Fragrances</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MAIN CONTENT ═══════════════════════════════════════════════ -->
+  <main>
+
+    <!-- HERO ─────────────────────────────────────────────────────── -->
+    <section class="hero" aria-label="Welcome to Perfume Paradise">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="label">Curated Fragrances</span>
+        </div>
+        <h1>Find Your<br><em>Signature Scent</em></h1>
+        <p class="hero-desc">
+          Discover our hand-curated collection of luxury perfumes and colognes —
+          from timeless classics to contemporary icons. 40+ brands in one place.
+        </p>
+        <div class="hero-actions">
+          <a href="products.html" class="btn btn-primary btn-lg">Shop All Fragrances</a>
+          <button class="btn btn-secondary btn-lg" data-open-quiz>Find My Scent</button>
+        </div>
+      </div>
+      <div class="hero-media" aria-hidden="true">
+        <img src="https://cdn.shopify.com/s/files/1/0402/0210/9079/files/Creedclassics_aventuspdp1.png?v=1748825021"
+             alt="Luxury fragrance collection"
+             loading="eager"
+             style="width:100%;height:100%;object-fit:cover;object-position:center top">
+      </div>
+    </section>
+
+    <!-- PERKS BAR ────────────────────────────────────────────────── -->
+    <div class="perks-bar" aria-label="Store benefits">
+      <div class="container perks-inner">
+        <div class="perk-item">
+          <div class="perk-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div class="perk-text">
+            <h5>15-Day Returns</h5>
+            <p>With original receipt</p>
+          </div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/>
+            </svg>
+          </div>
+          <div class="perk-text">
+            <h5>Free Shipping</h5>
+            <p>On orders over $150</p>
+          </div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+            </svg>
+          </div>
+          <div class="perk-text">
+            <h5>100% Authentic</h5>
+            <p>Genuine, every bottle</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POLICY BANNER ────────────────────────────────────────────── -->
+    <div class="policy-banner" role="note">
+      <p>
+        <strong>Easy Returns:</strong>
+        Returns or exchanges accepted within <strong>15 days with receipt</strong> &nbsp;·&nbsp;
+        Mall St. Mathews, Louisville, KY &nbsp;·&nbsp;
+        <a href="policy.html" style="color:var(--color-gold-light); text-decoration:underline;">Learn More</a>
+      </p>
+    </div>
+
+    <!-- FEATURED / NEW ARRIVALS TABS ───────────────────────────── -->
+    <section class="section-pad tabs-wrap" aria-labelledby="collection-heading">
+      <div class="container">
+        <header class="section-header centered">
+          <span class="section-label">Our Selection</span>
+          <h2 id="collection-heading">Shop the Collection</h2>
+          <div class="section-divider"></div>
+        </header>
+
+        <div class="tab-nav">
+          <button class="tab-btn active" data-tab="bestsellers">Bestsellers</button>
+          <button class="tab-btn" data-tab="women">For Her</button>
+          <button class="tab-btn" data-tab="men">For Him</button>
+          <button class="tab-btn" data-tab="unisex">Unisex</button>
+          <button class="tab-btn" data-tab="new">New Arrivals</button>
+        </div>
+
+        <div class="tab-panel active" data-panel="bestsellers">
+          <div class="product-grid" id="bestsellerGrid">
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="women">
+          <div class="product-grid" id="womenGrid">
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="men">
+          <div class="product-grid" id="menGrid">
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="unisex">
+          <div class="product-grid" id="unisexGrid">
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="new">
+          <div class="product-grid" id="newGrid">
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+            <div class="skeleton" style="height:420px;border-radius:8px"></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <a href="products.html" class="btn btn-secondary">View All Fragrances</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORIES ───────────────────────────────────────────────── -->
+    <section class="section-pad" style="background:var(--color-surface)" aria-labelledby="categories-heading">
+      <div class="container">
+        <header class="section-header centered">
+          <span class="section-label">Browse By</span>
+          <h2 id="categories-heading">Shop by Category</h2>
+          <div class="section-divider"></div>
+        </header>
+        <div class="grid-3" style="gap:1.5rem;max-width:900px;margin:0 auto">
+          <a href="products.html?category=women" class="category-card" style="display:block;border-radius:var(--radius-md);overflow:hidden;position:relative;aspect-ratio:3/4;transition:transform var(--transition-base),box-shadow var(--transition-base);"
+             onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='var(--shadow-md)'"
+             onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <img src="https://images.unsplash.com/photo-1594897030264-ab7d87efc473?w=600&q=80&auto=format&fit=crop"
+                 alt="Women's Fragrances" loading="lazy"
+                 style="width:100%;height:100%;object-fit:cover;display:block">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.1) 60%);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:1.5rem 1rem;text-align:center">
+              <h3 style="font-size:1.3rem;font-weight:400;color:#fff;margin-bottom:0.3rem">For Her</h3>
+              <p style="font-size:0.75rem;color:rgba(255,255,255,0.75);letter-spacing:0.1em;text-transform:uppercase">Women's Fragrances</p>
+            </div>
+          </a>
+          <a href="products.html?category=men" class="category-card" style="display:block;border-radius:var(--radius-md);overflow:hidden;position:relative;aspect-ratio:3/4;transition:transform var(--transition-base),box-shadow var(--transition-base);"
+             onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='var(--shadow-md)'"
+             onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <img src="https://images.unsplash.com/photo-1587017539504-67cfbddac569?w=600&q=80&auto=format&fit=crop"
+                 alt="Men's Fragrances" loading="lazy"
+                 style="width:100%;height:100%;object-fit:cover;display:block">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.1) 60%);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:1.5rem 1rem;text-align:center">
+              <h3 style="font-size:1.3rem;font-weight:400;color:#fff;margin-bottom:0.3rem">For Him</h3>
+              <p style="font-size:0.75rem;color:rgba(255,255,255,0.75);letter-spacing:0.1em;text-transform:uppercase">Men's Fragrances</p>
+            </div>
+          </a>
+          <a href="products.html?category=unisex" class="category-card" style="display:block;border-radius:var(--radius-md);overflow:hidden;position:relative;aspect-ratio:3/4;transition:transform var(--transition-base),box-shadow var(--transition-base);"
+             onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='var(--shadow-md)'"
+             onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <img src="https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?w=600&q=80&auto=format&fit=crop"
+                 alt="Unisex Fragrances" loading="lazy"
+                 style="width:100%;height:100%;object-fit:cover;display:block">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.1) 60%);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:1.5rem 1rem;text-align:center">
+              <h3 style="font-size:1.3rem;font-weight:400;color:#fff;margin-bottom:0.3rem">Unisex</h3>
+              <p style="font-size:0.75rem;color:rgba(255,255,255,0.75);letter-spacing:0.1em;text-transform:uppercase">Gender-Free Scents</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENT QUIZ BANNER ───────────────────────────────────────── -->
+    <section class="scent-quiz-banner" aria-label="Scent Finder Quiz">
+      <div class="container">
+        <span class="section-label" style="justify-content:center">Personalized</span>
+        <h2>Not Sure Where to Start?</h2>
+        <p>Answer 3 quick questions and we'll match you with your perfect fragrance.</p>
+        <button class="btn btn-primary btn-lg" data-open-quiz>Take the Scent Quiz</button>
+      </div>
+    </section>
+
+    <!-- STORE INFO ────────────────────────────────────────────────── -->
+    <section class="store-section section-pad" aria-labelledby="store-heading">
+      <div class="container store-section-inner">
+        <div class="store-media">
+          <img src="WhatsApp Image 2026-04-20 at 10.50.42 PM.jpeg"
+               alt="Luxury fragrance bottles at Perfume Paradise"
+               loading="lazy"
+               style="border-radius:var(--radius-md);width:100%;aspect-ratio:4/3;object-fit:cover;display:block"
+               onerror="this.src='https://images.unsplash.com/photo-1541643600914-78b084683702?w=800&q=80&auto=format&fit=crop'">
+        </div>
+        <div class="store-content">
+          <span class="section-label">Where to Find Us</span>
+          <h2 id="store-heading">Visit Perfume Paradise</h2>
+          <p>
+            We're Louisville's premier destination for luxury fragrances. Step inside and
+            let our knowledgeable staff guide you through our curated collection of
+            40+ designer perfumes and colognes — from classic houses to niche independents.
+          </p>
+          <div class="store-detail">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+            </svg>
+            <div>
+              <strong>Location</strong>
+              <span>Mall St. Mathews, Louisville, Kentucky</span>
+            </div>
+          </div>
+          <div class="store-detail">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 15.75l3-3m0 0l3-3m-3 3H1.5m14.25 3.75v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V8.25m13.5 0V4.875c0-.621-.504-1.125-1.125-1.125H8.25"/>
+            </svg>
+            <div>
+              <strong>Return Policy</strong>
+              <span>Returns or exchanges accepted within 15 days with receipt</span>
+            </div>
+          </div>
+          <a href="policy.html" class="btn btn-secondary mt-3">Store Info & Policy</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECENTLY VIEWED ──────────────────────────────────────────── -->
+    <section class="recently-viewed" id="recentlyViewedSection">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">Your History</span>
+          <h2>Recently Viewed</h2>
+          <div class="section-divider" style="margin:1rem 0 0"></div>
+        </header>
+        <div id="recentlyViewedGrid">
+          <div class="product-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER ───────────────────────────────────────────────── -->
+    <section class="newsletter-section" aria-label="Newsletter">
+      <div class="container">
+        <span class="section-label" style="color:var(--color-gold-light);justify-content:center">Stay Connected</span>
+        <h2>Get Exclusive Offers</h2>
+        <p>Be the first to know about new arrivals, limited editions, and special promotions.</p>
+        <form class="newsletter-form" id="newsletterForm" novalidate>
+          <input type="email" placeholder="Enter your email address" required aria-label="Email address">
+          <button type="submit" class="btn btn-gold">Subscribe</button>
+        </form>
+        <div class="newsletter-success" id="newsletterSuccess">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Thank you for subscribing!
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══ SITE FOOTER ════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-name">Perfume Paradise</span>
+            <span class="logo-tagline">Name Brand for Less</span>
+          </a>
+          <p>Luxury fragrances curated with passion and expertise at Mall St. Mathews.</p>
+          <!-- Social Links -->
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="TikTok">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.16 8.16 0 004.77 1.52V6.74a4.85 4.85 0 01-1-.05z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Shop</h5>
+          <ul>
+            <li><a href="products.html">All Fragrances</a></li>
+            <li><a href="products.html?category=women">For Her</a></li>
+            <li><a href="products.html?category=men">For Him</a></li>
+            <li><a href="products.html?category=unisex">Unisex</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Discover</h5>
+          <ul>
+            <li><a href="#" data-open-quiz>Scent Finder Quiz</a></li>
+            <li><a href="products.html?sort=rating-desc">Top Rated</a></li>
+            <li><a href="products.html?isNew=true">New Arrivals</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Information</h5>
+          <ul>
+            <li><a href="policy.html">Our Store</a></li>
+            <li><a href="policy.html#returns">Return Policy</a></li>
+            <li><a href="policy.html#contact">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Visit Us</h5>
+          <div class="footer-location">
+            <strong>Perfume Paradise</strong>
+            <span>Mall St. Mathews<br>Louisville, Kentucky</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="year"></span> Perfume Paradise. All rights reserved.</p>
+        <a href="policy.html#returns" class="footer-policy-link">Return &amp; Exchange Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/clover-api.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initAnnouncementBar();
+      initScentQuiz();
+      initNewsletter();
+      initTabs();
+
+      // Wishlist badge
+      const wc = document.getElementById('wishlistCount');
+      if (wc) {
+        const ids = Wishlist.getIds();
+        if (ids.length > 0) { wc.textContent = ids.length; wc.classList.remove('hidden'); }
+      }
+
+      const all = await ProductService.getAll();
+
+      // Bestsellers tab
+      const bestsellerGrid = document.getElementById('bestsellerGrid');
+      if (bestsellerGrid) {
+        const bestsellers = all.filter(p => p.isBestseller);
+        bestsellerGrid.innerHTML = '';
+        bestsellers.forEach(p => bestsellerGrid.appendChild(renderProductCard(p)));
+      }
+
+      // Women tab
+      const womenGrid = document.getElementById('womenGrid');
+      if (womenGrid) {
+        const women = all.filter(p => p.category === 'women').slice(0, 8);
+        womenGrid.innerHTML = '';
+        women.forEach(p => womenGrid.appendChild(renderProductCard(p)));
+      }
+
+      // Men tab
+      const menGrid = document.getElementById('menGrid');
+      if (menGrid) {
+        const men = all.filter(p => p.category === 'men').slice(0, 8);
+        menGrid.innerHTML = '';
+        men.forEach(p => menGrid.appendChild(renderProductCard(p)));
+      }
+
+      // Unisex tab
+      const unisexGrid = document.getElementById('unisexGrid');
+      if (unisexGrid) {
+        const unisex = all.filter(p => p.category === 'unisex');
+        unisexGrid.innerHTML = '';
+        unisex.forEach(p => unisexGrid.appendChild(renderProductCard(p)));
+      }
+
+      // New Arrivals tab
+      const newGrid = document.getElementById('newGrid');
+      if (newGrid) {
+        const newArrivals = all.filter(p => p.isNew);
+        newGrid.innerHTML = '';
+        if (newArrivals.length === 0) {
+          newGrid.innerHTML = '<p style="color:var(--color-text-muted);padding:2rem 0">Check back soon for new arrivals!</p>';
+        } else {
+          newArrivals.forEach(p => newGrid.appendChild(renderProductCard(p)));
+        }
+      }
+
+      // Recently viewed
+      renderRecentlyViewed('recentlyViewedGrid');
+    });
+  </script>
+</body>
+</html>

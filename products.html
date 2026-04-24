@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Shop all luxury fragrances at Perfume Paradise — perfumes and colognes for women, men, and unisex. Louisville, Kentucky.">
+  <title>Shop Fragrances | Perfume Paradise</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-body">
+
+  <!-- ══ ANNOUNCEMENT BAR ══════════════════════════════════ -->
+  <div class="announcement-bar" id="announcementBar" role="note">
+    🎁 Free shipping on orders over $150 &nbsp;·&nbsp; 15-Day easy returns with receipt
+    <button class="announcement-close" aria-label="Dismiss">×</button>
+  </div>
+
+  <!-- ══ SITE HEADER ═══════════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-name">Perfume Paradise</span>
+        <span class="logo-tagline">Name Brand for Less</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="products.html" class="active">Shop</a>
+        <a href="products.html?category=women">For Her</a>
+        <a href="products.html?category=men">For Him</a>
+        <a href="products.html?category=unisex">Unisex</a>
+        <a href="policy.html">Our Store</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" data-search-toggle aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Wishlist" title="Your Wishlist" onclick="window.location.href='products.html'">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+          <span class="cart-badge hidden" id="wishlistCount">0</span>
+        </button>
+        <button class="icon-btn" data-cart-toggle aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/></svg>
+          <span class="cart-badge hidden">0</span>
+        </button>
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ MOBILE MENU ════════════════════════════════════════════════ -->
+  <nav class="mobile-menu" id="mobileMenu">
+    <div class="mobile-nav">
+      <a href="index.html">Home</a>
+      <a href="products.html">Shop All Fragrances</a>
+      <a href="products.html?category=women">For Her</a>
+      <a href="products.html?category=men">For Him</a>
+      <a href="products.html?category=unisex">Unisex</a>
+      <a href="policy.html">Our Store & Policy</a>
+    </div>
+    <button class="filters-mobile-toggle" id="filtersMobileToggle" style="width:100%;justify-content:center;margin-top:0.5rem">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg>
+      Filters
+    </button>
+  </nav>
+
+  <!-- ══ SEARCH OVERLAY ════════════════════════════════════════════ -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-box">
+      <div class="search-input-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0016.803 15.803z"/></svg>
+        <input type="search" id="searchInput" placeholder="Search fragrances, brands, scents…" autocomplete="off">
+        <button class="search-close" id="searchClose" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CART DRAWER ════════════════════════════════════════════════ -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="free-shipping-bar" id="shippingBar">
+      <p class="shipping-bar-text">Spend <strong>$150 more</strong> for free shipping</p>
+      <div class="shipping-progress">
+        <div class="shipping-progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-subtotal">
+        <span class="label">Subtotal</span>
+        <span class="amount" id="cartSubtotal">$0.00</span>
+      </div>
+      <p class="cart-note">Shipping and taxes calculated at checkout</p>
+      <a href="checkout.html" class="btn btn-primary btn-block">Proceed to Checkout</a>
+      <button onclick="CartUI.close()" class="btn btn-ghost btn-block mt-2">Continue Shopping</button>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN CONTENT ═══════════════════════════════════════════════ -->
+  <main>
+
+    <!-- PAGE HERO ────────────────────────────────────────────────── -->
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="index.html">Home</a>
+          <span>/</span>
+          <span aria-current="page">Shop</span>
+        </nav>
+        <h1>All Fragrances</h1>
+        <p style="color:var(--color-text-muted);margin:0.5rem auto 0;font-size:0.9rem">
+          Discover our complete collection of 40+ perfumes and colognes
+        </p>
+      </div>
+    </div>
+
+    <!-- PRODUCTS LAYOUT ──────────────────────────────────────────── -->
+    <section class="section-pad">
+      <div class="container">
+        <div class="products-layout">
+
+          <!-- ── FILTERS PANEL ─────────────────────────────────── -->
+          <aside class="filters-panel" id="filtersPanel" aria-label="Product filters">
+            <div class="filters-header">
+              <h4>Filters</h4>
+              <button class="filters-clear" id="clearFilters">Clear all</button>
+            </div>
+
+            <!-- Category -->
+            <div class="filter-group">
+              <div class="filter-group-label">Category</div>
+              <label class="filter-option">
+                <input type="checkbox" name="category" value="women"> For Her
+                <span class="filter-count" data-count="women"></span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="category" value="men"> For Him
+                <span class="filter-count" data-count="men"></span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="category" value="unisex"> Unisex
+                <span class="filter-count" data-count="unisex"></span>
+              </label>
+            </div>
+
+            <!-- Scent Family -->
+            <div class="filter-group">
+              <div class="filter-group-label">Scent Family</div>
+              <label class="filter-option">
+                <input type="checkbox" name="scentFamily" value="floral"> 🌸 Floral
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="scentFamily" value="woody"> 🌲 Woody
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="scentFamily" value="oriental"> 🍯 Oriental / Amber
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="scentFamily" value="fresh"> 💧 Fresh
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="scentFamily" value="citrus"> 🍋 Citrus
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="scentFamily" value="aquatic"> 🌊 Aquatic
+              </label>
+            </div>
+
+            <!-- Concentration -->
+            <div class="filter-group">
+              <div class="filter-group-label">Concentration</div>
+              <label class="filter-option">
+                <input type="checkbox" name="concentration" value="Parfum"> Parfum (strongest)
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="concentration" value="EDP"> EDP
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="concentration" value="EDT"> EDT
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="concentration" value="Cologne"> Cologne
+              </label>
+            </div>
+
+            <!-- Brand -->
+            <div class="filter-group">
+              <div class="filter-group-label">Brand</div>
+              <div id="brandFilterList" style="max-height:220px;overflow-y:auto;padding-right:4px">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Price Range -->
+            <div class="filter-group">
+              <div class="filter-group-label">Price Range</div>
+              <div class="price-range-inputs">
+                <input type="number" id="priceMin" placeholder="$0" min="0">
+                <span>–</span>
+                <input type="number" id="priceMax" placeholder="$500" min="0">
+              </div>
+            </div>
+
+            <!-- In Stock -->
+            <div class="filter-group">
+              <label class="filter-option">
+                <input type="checkbox" name="inStock" id="inStockOnly"> In Stock Only
+              </label>
+            </div>
+
+            <!-- Bestsellers only -->
+            <div class="filter-group">
+              <label class="filter-option">
+                <input type="checkbox" id="bestsellersOnly"> Bestsellers Only
+              </label>
+            </div>
+
+            <!-- Mobile close -->
+            <button class="btn btn-primary btn-block mt-3" id="filtersApplyMobile" style="display:none">
+              Apply Filters
+            </button>
+          </aside>
+
+          <!-- ── PRODUCTS MAIN ──────────────────────────────────── -->
+          <div>
+            <!-- Toolbar -->
+            <div class="products-toolbar">
+              <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+                <button class="filters-mobile-toggle" id="filtersToggle">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg>
+                  Filters
+                </button>
+                <span class="products-count" id="productsCount">Loading…</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:0.75rem">
+                <select class="sort-select" id="sortSelect" aria-label="Sort products">
+                  <option value="default">Featured</option>
+                  <option value="rating-desc">Top Rated</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="name-asc">Name: A–Z</option>
+                  <option value="newest">New Arrivals</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Active filter chips -->
+            <div id="activeFilterChips" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem"></div>
+
+            <!-- Grid -->
+            <div class="product-grid" id="productsGrid">
+              <div class="skeleton" style="height:400px;border-radius:8px"></div>
+              <div class="skeleton" style="height:400px;border-radius:8px"></div>
+              <div class="skeleton" style="height:400px;border-radius:8px"></div>
+              <div class="skeleton" style="height:400px;border-radius:8px"></div>
+              <div class="skeleton" style="height:400px;border-radius:8px"></div>
+              <div class="skeleton" style="height:400px;border-radius:8px"></div>
+            </div>
+
+            <!-- Empty state -->
+            <div id="emptyState" class="hidden" style="text-align:center;padding:4rem 1rem">
+              <p style="font-size:2rem;margin-bottom:1rem">🔍</p>
+              <h3 style="font-weight:400;margin-bottom:0.5rem">No fragrances found</h3>
+              <p style="color:var(--color-text-muted);margin:0 auto 1.5rem;font-size:0.9rem">Try adjusting your filters or search term.</p>
+              <button class="btn btn-secondary" id="resetFiltersBtn">Clear All Filters</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══ SITE FOOTER ════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <span class="logo-name">Perfume Paradise</span>
+            <span class="logo-tagline">Name Brand for Less</span>
+          </a>
+          <p>Luxury fragrances curated with passion and expertise at Mall St. Mathews.</p>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="TikTok">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.16 8.16 0 004.77 1.52V6.74a4.85 4.85 0 01-1-.05z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Shop</h5>
+          <ul>
+            <li><a href="products.html">All Fragrances</a></li>
+            <li><a href="products.html?category=women">For Her</a></li>
+            <li><a href="products.html?category=men">For Him</a></li>
+            <li><a href="products.html?category=unisex">Unisex</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Information</h5>
+          <ul>
+            <li><a href="policy.html">Our Store</a></li>
+            <li><a href="policy.html#returns">Return Policy</a></li>
+            <li><a href="policy.html#contact">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Visit Us</h5>
+          <div class="footer-location">
+            <strong>Perfume Paradise</strong>
+            <span>Mall St. Mathews<br>Louisville, Kentucky</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="year"></span> Perfume Paradise. All rights reserved.</p>
+        <a href="policy.html#returns" class="footer-policy-link">Return &amp; Exchange Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/clover-api.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    let allProducts = [];
+    let activeFilters = {
+      categories: [], scentFamilies: [], brands: [],
+      concentrations: [], minPrice: null, maxPrice: null,
+      inStockOnly: false, bestsellersOnly: false
+    };
+    let sortBy = 'default';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initAnnouncementBar();
+
+      // Wishlist badge
+      const wc = document.getElementById('wishlistCount');
+      if (wc) {
+        const ids = Wishlist.getIds();
+        if (ids.length > 0) { wc.textContent = ids.length; wc.classList.remove('hidden'); }
+      }
+
+      allProducts = await ProductService.getAll();
+      _populateBrandFilter();
+      _updateCounts();
+      _applyUrlParams();
+      await renderProducts();
+
+      // Filter listeners
+      document.querySelectorAll('input[name="category"]').forEach(cb =>
+        cb.addEventListener('change', () => { _syncFilters(); renderProducts(); }));
+      document.querySelectorAll('input[name="scentFamily"]').forEach(cb =>
+        cb.addEventListener('change', () => { _syncFilters(); renderProducts(); }));
+      document.querySelectorAll('input[name="concentration"]').forEach(cb =>
+        cb.addEventListener('change', () => { _syncFilters(); renderProducts(); }));
+      document.getElementById('inStockOnly').addEventListener('change', () => { _syncFilters(); renderProducts(); });
+      document.getElementById('bestsellersOnly').addEventListener('change', () => { _syncFilters(); renderProducts(); });
+      document.getElementById('priceMin').addEventListener('input', _debounce(() => { _syncFilters(); renderProducts(); }, 400));
+      document.getElementById('priceMax').addEventListener('input', _debounce(() => { _syncFilters(); renderProducts(); }, 400));
+      document.getElementById('clearFilters').addEventListener('click', resetFilters);
+      document.getElementById('resetFiltersBtn')?.addEventListener('click', resetFilters);
+      document.getElementById('sortSelect').addEventListener('change', e => { sortBy = e.target.value; renderProducts(); });
+
+      // Mobile filters
+      const filtersPanel = document.getElementById('filtersPanel');
+      document.getElementById('filtersToggle')?.addEventListener('click', () => {
+        filtersPanel.classList.toggle('mobile-open');
+        document.getElementById('filtersApplyMobile').style.display =
+          filtersPanel.classList.contains('mobile-open') ? 'block' : 'none';
+      });
+      document.getElementById('filtersApplyMobile')?.addEventListener('click', () => {
+        filtersPanel.classList.remove('mobile-open');
+        document.getElementById('filtersApplyMobile').style.display = 'none';
+      });
+    });
+
+    function _populateBrandFilter() {
+      const list = document.getElementById('brandFilterList');
+      if (!list) return;
+      const brands = ProductService.getUniqueBrands();
+      list.innerHTML = brands.map(brand => `
+        <label class="filter-option">
+          <input type="checkbox" name="brand" value="${brand}"> ${brand}
+          <span class="filter-count">${allProducts.filter(p => p.brand === brand).length}</span>
+        </label>
+      `).join('');
+      list.querySelectorAll('input[name="brand"]').forEach(cb =>
+        cb.addEventListener('change', () => { _syncFilters(); renderProducts(); }));
+    }
+
+    function _applyUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      const cat    = params.get('category');
+      const search = params.get('search');
+      const sort   = params.get('sort');
+
+      if (cat) {
+        const cb = document.querySelector(`input[name="category"][value="${cat}"]`);
+        if (cb) { cb.checked = true; activeFilters.categories = [cat]; }
+      }
+      if (search) { activeFilters._search = search; }
+      if (sort) {
+        sortBy = sort;
+        const sel = document.getElementById('sortSelect');
+        if (sel) sel.value = sort;
+      }
+    }
+
+    function _syncFilters() {
+      activeFilters.categories    = [...document.querySelectorAll('input[name="category"]:checked')].map(c => c.value);
+      activeFilters.scentFamilies = [...document.querySelectorAll('input[name="scentFamily"]:checked')].map(c => c.value);
+      activeFilters.concentrations= [...document.querySelectorAll('input[name="concentration"]:checked')].map(c => c.value);
+      activeFilters.brands        = [...document.querySelectorAll('input[name="brand"]:checked')].map(c => c.value);
+      activeFilters.inStockOnly   = document.getElementById('inStockOnly').checked;
+      activeFilters.bestsellersOnly = document.getElementById('bestsellersOnly').checked;
+      const minVal = document.getElementById('priceMin').value;
+      const maxVal = document.getElementById('priceMax').value;
+      activeFilters.minPrice = minVal ? parseFloat(minVal) : null;
+      activeFilters.maxPrice = maxVal ? parseFloat(maxVal) : null;
+      activeFilters._search = null;
+      _renderFilterChips();
+    }
+
+    function _renderFilterChips() {
+      const wrap = document.getElementById('activeFilterChips');
+      if (!wrap) return;
+      const chips = [];
+      activeFilters.categories.forEach(v => chips.push({ label: v === 'women' ? 'For Her' : v === 'men' ? 'For Him' : 'Unisex', key: 'category', value: v }));
+      activeFilters.scentFamilies.forEach(v => chips.push({ label: v.charAt(0).toUpperCase() + v.slice(1), key: 'scentFamily', value: v }));
+      activeFilters.concentrations.forEach(v => chips.push({ label: v, key: 'concentration', value: v }));
+      activeFilters.brands.forEach(v => chips.push({ label: v, key: 'brand', value: v }));
+      if (activeFilters.inStockOnly) chips.push({ label: 'In Stock', key: 'inStock', value: true });
+      if (activeFilters.bestsellersOnly) chips.push({ label: 'Bestsellers', key: 'bestsellers', value: true });
+
+      wrap.innerHTML = chips.map((c, i) =>
+        `<span style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.25rem 0.65rem;background:var(--color-gold-pale);border:1px solid var(--color-border);border-radius:100px;font-size:0.72rem;font-weight:500">
+          ${c.label}
+          <button onclick="removeChip(${i})" style="background:none;border:none;cursor:pointer;color:var(--color-text-muted);line-height:1;font-size:0.9rem;padding:0">×</button>
+        </span>`
+      ).join('');
+      wrap._chips = chips;
+    }
+
+    function removeChip(i) {
+      const chips = document.getElementById('activeFilterChips')._chips || [];
+      const chip = chips[i];
+      if (!chip) return;
+      if (chip.key === 'category') {
+        const cb = document.querySelector(`input[name="category"][value="${chip.value}"]`);
+        if (cb) cb.checked = false;
+      } else if (chip.key === 'scentFamily') {
+        const cb = document.querySelector(`input[name="scentFamily"][value="${chip.value}"]`);
+        if (cb) cb.checked = false;
+      } else if (chip.key === 'concentration') {
+        const cb = document.querySelector(`input[name="concentration"][value="${chip.value}"]`);
+        if (cb) cb.checked = false;
+      } else if (chip.key === 'brand') {
+        const cb = document.querySelector(`input[name="brand"][value="${chip.value}"]`);
+        if (cb) cb.checked = false;
+      } else if (chip.key === 'inStock') {
+        document.getElementById('inStockOnly').checked = false;
+      } else if (chip.key === 'bestsellers') {
+        document.getElementById('bestsellersOnly').checked = false;
+      }
+      _syncFilters();
+      renderProducts();
+    }
+
+    async function renderProducts() {
+      const grid  = document.getElementById('productsGrid');
+      const empty = document.getElementById('emptyState');
+      const count = document.getElementById('productsCount');
+
+      let results;
+      if (activeFilters._search) {
+        results = await ProductService.search(activeFilters._search);
+      } else {
+        results = await ProductService.filter({ ...activeFilters, sortBy });
+      }
+
+      // Client-side bestseller filter
+      if (activeFilters.bestsellersOnly) {
+        results = results.filter(p => p.isBestseller);
+      }
+
+      grid.innerHTML = '';
+      if (results.length === 0) {
+        empty.classList.remove('hidden');
+        count.textContent = '0 fragrances';
+      } else {
+        empty.classList.add('hidden');
+        results.forEach(p => grid.appendChild(renderProductCard(p)));
+        count.textContent = `${results.length} fragrance${results.length !== 1 ? 's' : ''}`;
+      }
+    }
+
+    function resetFilters() {
+      document.querySelectorAll('input[name="category"], input[name="scentFamily"], input[name="concentration"], input[name="brand"]')
+        .forEach(cb => cb.checked = false);
+      document.getElementById('inStockOnly').checked = false;
+      document.getElementById('bestsellersOnly').checked = false;
+      document.getElementById('priceMin').value = '';
+      document.getElementById('priceMax').value = '';
+      activeFilters = { categories: [], scentFamilies: [], brands: [], concentrations: [], minPrice: null, maxPrice: null, inStockOnly: false, bestsellersOnly: false };
+      document.getElementById('activeFilterChips').innerHTML = '';
+      renderProducts();
+    }
+
+    function _updateCounts() {
+      ['women','men','unisex'].forEach(cat => {
+        const el = document.querySelector(`[data-count="${cat}"]`);
+        if (el) el.textContent = allProducts.filter(p => p.category === cat).length;
+      });
+    }
+
+    function _debounce(fn, delay) {
+      let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
+    }
+  </script>
+</body>
+</html>
