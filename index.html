@@ -551,7 +551,94 @@
   <script src="js/main.js"></script>
   <script src="js/clover-api.js"></script>
   <script>
-  <!-- Business logic handled by js/ modules — source available upon request -->
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initAnnouncementBar();
+      initScentQuiz();
+      initNewsletter();
+      initTabs();
+
+      // Wishlist badge
+      const wc = document.getElementById('wishlistCount');
+      if (wc) {
+        const ids = Wishlist.getIds();
+        if (ids.length > 0) { wc.textContent = ids.length; wc.classList.remove('hidden'); }
+      }
+
+      await loadHomeProducts();
+    });
+
+    async function loadHomeProducts() {
+      try {
+        const all = await ProductService.getAll();
+        if (!Array.isArray(all) || all.length === 0) throw new Error('empty');
+
+        // Bestsellers tab
+        const bestsellerGrid = document.getElementById('bestsellerGrid');
+        if (bestsellerGrid) {
+          const bestsellers = all.filter(p => p.isBestseller);
+          bestsellerGrid.innerHTML = '';
+          bestsellers.forEach(p => bestsellerGrid.appendChild(renderProductCard(p)));
+        }
+
+        // Women tab
+        const womenGrid = document.getElementById('womenGrid');
+        if (womenGrid) {
+          const women = all.filter(p => p.category === 'women').slice(0, 8);
+          womenGrid.innerHTML = '';
+          women.forEach(p => womenGrid.appendChild(renderProductCard(p)));
+        }
+
+        // Men tab
+        const menGrid = document.getElementById('menGrid');
+        if (menGrid) {
+          const men = all.filter(p => p.category === 'men').slice(0, 8);
+          menGrid.innerHTML = '';
+          men.forEach(p => menGrid.appendChild(renderProductCard(p)));
+        }
+
+        // Unisex tab
+        const unisexGrid = document.getElementById('unisexGrid');
+        if (unisexGrid) {
+          const unisex = all.filter(p => p.category === 'unisex');
+          unisexGrid.innerHTML = '';
+          unisex.forEach(p => unisexGrid.appendChild(renderProductCard(p)));
+        }
+
+        // New Arrivals tab
+        const newGrid = document.getElementById('newGrid');
+        if (newGrid) {
+          const newArrivals = all.filter(p => p.isNew);
+          newGrid.innerHTML = '';
+          if (newArrivals.length === 0) {
+            newGrid.innerHTML = '<p style="color:var(--color-text-muted);padding:2rem 0">Check back soon for new arrivals!</p>';
+          } else {
+            newArrivals.forEach(p => newGrid.appendChild(renderProductCard(p)));
+          }
+        }
+
+        // Recently viewed
+        renderRecentlyViewed('recentlyViewedGrid');
+      } catch {
+        _showHomeError();
+      }
+    }
+
+    function _showHomeError() {
+      const activeGrid = document.querySelector('.tab-panel.active .product-grid')
+                      || document.getElementById('bestsellerGrid');
+      if (!activeGrid) return;
+      activeGrid.innerHTML = `
+        <p style="color:var(--color-text-muted);grid-column:1/-1;padding:2rem 0;text-align:center">
+          Couldn't load products. Check your connection.
+          <br><br>
+          <button onclick="ProductService.clearCache?.();loadHomeProducts()"
+                  style="margin-top:.5rem;padding:.5rem 1.5rem;cursor:pointer">
+            Try Again
+          </button>
+        </p>`;
+    }
   </script>
 </body>
 </html>
