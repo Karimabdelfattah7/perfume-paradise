@@ -238,7 +238,7 @@
     <!-- PERKS BAR ────────────────────────────────────────────────── -->
     <div class="perks-bar" aria-label="Store benefits">
       <div class="container perks-inner">
-        <div class="perk-item">
+        <div class="perk-item" data-reveal="up" data-delay="1">
           <div class="perk-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -249,7 +249,7 @@
             <p>With original receipt</p>
           </div>
         </div>
-        <div class="perk-item">
+        <div class="perk-item" data-reveal="up" data-delay="2">
           <div class="perk-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/>
@@ -260,7 +260,7 @@
             <p>On orders over $150</p>
           </div>
         </div>
-        <div class="perk-item">
+        <div class="perk-item" data-reveal="up" data-delay="3">
           <div class="perk-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
@@ -287,7 +287,7 @@
     <!-- FEATURED / NEW ARRIVALS TABS ───────────────────────────── -->
     <section class="section-pad tabs-wrap" aria-labelledby="collection-heading">
       <div class="container">
-        <header class="section-header centered">
+        <header class="section-header centered" data-reveal="up">
           <span class="section-label">Our Selection</span>
           <h2 id="collection-heading">Shop the Collection</h2>
           <div class="section-divider"></div>
@@ -355,13 +355,13 @@
     <!-- CATEGORIES ───────────────────────────────────────────────── -->
     <section class="section-pad" style="background:var(--color-surface)" aria-labelledby="categories-heading">
       <div class="container">
-        <header class="section-header centered">
+        <header class="section-header centered" data-reveal="up">
           <span class="section-label">Browse By</span>
           <h2 id="categories-heading">Shop by Category</h2>
           <div class="section-divider"></div>
         </header>
         <div class="grid-3" style="gap:1.5rem;max-width:900px;margin:0 auto">
-          <a href="products.html?category=women" class="category-card" style="display:block;border-radius:var(--radius-md);overflow:hidden;position:relative;aspect-ratio:3/4;transition:transform var(--transition-base),box-shadow var(--transition-base);"
+          <a href="products.html?category=women" class="category-card" data-reveal="up" data-delay="1" style="display:block;border-radius:var(--radius-md);overflow:hidden;position:relative;aspect-ratio:3/4;transition:transform var(--transition-base),box-shadow var(--transition-base);"
              onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='var(--shadow-md)'"
              onmouseout="this.style.transform='';this.style.boxShadow=''">
             <img src="https://images.unsplash.com/photo-1594897030264-ab7d87efc473?w=600&q=80&auto=format&fit=crop"
@@ -551,7 +551,49 @@
   <script src="js/main.js"></script>
   <script src="js/clover-api.js"></script>
   <script>
-  <!-- Business logic handled by js/ modules — source available upon request -->
+    // ── Footer year ────────────────────────────────────────────
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ── Page init after DOM ready ──────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      initAnnouncementBar();
+      initScentQuiz();
+      initNewsletter();
+      initTabs();
+      loadHomepageProducts();
+      renderRecentlyViewed('recentlyViewedGrid');
+    });
+
+    // ── Load all product grids ─────────────────────────────────
+    async function loadHomepageProducts() {
+      const grids = {
+        bestsellerGrid: () => ProductService.getBestsellers(8),
+        womenGrid:      () => ProductService.getByCategory('women', 8),
+        menGrid:        () => ProductService.getByCategory('men', 8),
+        unisexGrid:     () => ProductService.getByCategory('unisex', 8),
+        newGrid:        () => ProductService.filter({ sortBy: 'newest' }).then(r => r.filter(p => p.isNew)),
+      };
+
+      for (const [id, fetcher] of Object.entries(grids)) {
+        const container = document.getElementById(id);
+        if (!container) continue;
+        try {
+          const products = await fetcher();
+          container.innerHTML = '';
+          if (products.length === 0) {
+            container.innerHTML = '<p style="color:var(--color-text-muted);padding:2rem">No products found.</p>';
+          } else {
+            products.forEach(p => container.appendChild(renderProductCard(p)));
+            // Stagger animate — only the active (visible) panel on load
+            if (id === 'bestsellerGrid') animateCards(container);
+          }
+        } catch (err) {
+          container.innerHTML = '<p style="color:var(--color-text-muted);padding:2rem">Could not load products.</p>';
+          console.error('Failed to load grid', id, err);
+        }
+      }
+      refreshScrollReveal();
+    }
   </script>
 </body>
 </html>

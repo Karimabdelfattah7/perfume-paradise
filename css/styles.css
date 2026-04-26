@@ -2234,3 +2234,361 @@ p { max-width: 65ch; }
   .tab-btn { padding: 0.6rem 1rem; font-size: 0.72rem; }
 }
 
+/* ============================================================
+   37. MOTION & ANIMATION SYSTEM
+   ============================================================ */
+
+/* ── Page-load progress bar ─────────────────────────────── */
+#pp-load-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-light));
+  z-index: 9999;
+  transition: width 0.4s ease, opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* ── Scroll reveal base ─────────────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-reveal="up"]    { transform: translateY(36px); }
+[data-reveal="left"]  { transform: translateX(-36px); }
+[data-reveal="right"] { transform: translateX(36px); }
+[data-reveal="scale"] { transform: scale(0.88); }
+[data-reveal="fade"]  { transform: none; }
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+/* Stagger delays — add data-delay="1" … "6" */
+[data-delay="1"] { transition-delay: 0.08s; }
+[data-delay="2"] { transition-delay: 0.16s; }
+[data-delay="3"] { transition-delay: 0.24s; }
+[data-delay="4"] { transition-delay: 0.32s; }
+[data-delay="5"] { transition-delay: 0.40s; }
+[data-delay="6"] { transition-delay: 0.48s; }
+
+/* ── Hero entrance keyframes ─────────────────────────────── */
+@keyframes heroLineIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes heroDividerIn {
+  from { opacity: 0; width: 0; }
+  to   { opacity: 1; width: 32px; }
+}
+
+/* Applied by JS on DOMContentLoaded */
+.hero-animate .hero-eyebrow {
+  animation: heroLineIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+.hero-animate .hero h1 {
+  animation: heroLineIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
+}
+.hero-animate .hero-desc {
+  animation: heroLineIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+}
+.hero-animate .hero-actions {
+  animation: heroLineIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+}
+.hero-animate .hero-media {
+  animation: heroFadeIn 1.2s ease 0.2s both;
+}
+
+/* ── Parallax wrapper ────────────────────────────────────── */
+.hero-media {
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+
+/* ── Enhanced product card hover ─────────────────────────── */
+.product-card {
+  transition: box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              transform  0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.25s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.13);
+  border-color: var(--color-gold);
+}
+
+.product-card-img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity   0.4s ease;
+}
+
+.product-card:hover .product-card-img {
+  transform: scale(1.07);
+}
+
+/* ── Product card stagger entrance ───────────────────────── */
+.product-card-enter {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.25s ease;
+}
+
+.product-card-enter.card-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Tab panel fade transition ───────────────────────────── */
+.tab-panel.active {
+  animation: tabReveal 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes tabReveal {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Mobile menu slide animation ─────────────────────────── */
+.mobile-menu {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-12px);
+  pointer-events: none;
+  transition: opacity    0.28s cubic-bezier(0.22, 1, 0.36, 1),
+              transform  0.28s cubic-bezier(0.22, 1, 0.36, 1),
+              visibility 0s   0.28s;
+}
+
+.mobile-menu.open {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+  transition: opacity   0.28s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Button ripple ───────────────────────────────────────── */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  transform: scale(0);
+  animation: rippleAnim 0.55s linear;
+  pointer-events: none;
+}
+
+@keyframes rippleAnim {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* Dark-bg button ripple (primary/gold) */
+.btn-secondary .btn-ripple,
+.btn-ghost .btn-ripple {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ── Button lift on hover ────────────────────────────────── */
+.btn {
+  transition: all var(--transition-base), transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.btn-secondary:hover,
+.btn-ghost:hover {
+  transform: translateY(-2px);
+}
+
+/* ── Announcement bar slide in ───────────────────────────── */
+.announcement-bar {
+  animation: slideDown 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+/* ── Wishlist heart pulse on activate ───────────────────── */
+@keyframes heartPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  70%  { transform: scale(0.88); }
+  100% { transform: scale(1); }
+}
+
+.wishlist-btn.active {
+  animation: heartPop 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Size button selection bounce ────────────────────────── */
+@keyframes sizePop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(0.88); }
+  100% { transform: scale(1); }
+}
+
+.size-btn.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+  animation: sizePop 0.3s ease;
+}
+
+.size-btn {
+  padding: 0.5rem 1rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-family: var(--font-body);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: transparent;
+  color: var(--color-text);
+}
+
+.size-btn:hover:not(.active) {
+  border-color: var(--color-primary);
+  background: var(--color-gold-pale);
+}
+
+/* ── Cart item entrance ──────────────────────────────────── */
+@keyframes cartItemIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.cart-item {
+  animation: cartItemIn 0.3s ease;
+}
+
+/* ── Confirmation icon animate ───────────────────────────── */
+@keyframes confirmPop {
+  0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
+  60%  { transform: scale(1.15) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.confirmation-icon {
+  animation: confirmPop 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+/* ── Section header underline draw ──────────────────────── */
+.section-divider {
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Logo subtle hover ───────────────────────────────────── */
+.logo {
+  transition: opacity 0.2s ease;
+}
+
+.logo:hover {
+  opacity: 0.82;
+}
+
+/* ── Nav link underline slide ────────────────────────────── */
+.main-nav a {
+  position: relative;
+}
+
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  width: 0; height: 1px;
+  background: var(--color-gold);
+  transition: width 0.25s ease, left 0.25s ease;
+}
+
+.main-nav a:hover::after,
+.main-nav a.active::after {
+  width: 80%;
+  left: 10%;
+}
+
+/* ── Perks bar item hover ────────────────────────────────── */
+.perk-item {
+  transition: background 0.25s ease;
+}
+
+.perk-item:hover {
+  background: #242424;
+}
+
+.perk-icon {
+  transition: border-color 0.25s ease, transform 0.3s ease;
+}
+
+.perk-item:hover .perk-icon {
+  border-color: var(--color-gold);
+  transform: scale(1.08);
+}
+
+/* ── Search overlay slide ────────────────────────────────── */
+.search-box {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity   0.35s ease;
+  transform: translateY(-16px);
+  opacity: 0;
+}
+
+.search-overlay.open .search-box {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ── Category card enhanced hover ────────────────────────── */
+.category-card img {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.category-card:hover img {
+  transform: scale(1.06);
+}
+
+/* ── Filter chip entrance ────────────────────────────────── */
+@keyframes chipIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+#activeFilterChips span {
+  animation: chipIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Reduce motion respect ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+}
+

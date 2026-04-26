@@ -1,7 +1,19 @@
-node_modules/
+# Local credential overrides — NEVER commit these
+js/clover-config.local.js
 .env
-.env.local
+.env.*
+*.local
+
+# OS junk
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Editor
 .vscode/
 .idea/
+*.swp
+*~
+
+# Claude session data
+.claude/

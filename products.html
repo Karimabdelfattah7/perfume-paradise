@@ -341,7 +341,227 @@
   <script src="js/main.js"></script>
   <script src="js/clover-api.js"></script>
   <script>
-  <!-- Business logic handled by js/ modules — source available upon request -->
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initAnnouncementBar();
+      populateBrandFilters();
+      populateCategoryCounts();
+      readUrlParams();
+      applyAndRender();
+      bindFilterEvents();
+      bindMobileFilters();
+    });
+
+    // ── Populate brand checkboxes from product data ─────────────
+    function populateBrandFilters() {
+      const list = document.getElementById('brandFilterList');
+      if (!list) return;
+      ProductService.getUniqueBrands().forEach(brand => {
+        const label = document.createElement('label');
+        label.className = 'filter-option';
+        label.innerHTML = `<input type="checkbox" name="brand" value="${brand}"> ${brand}`;
+        list.appendChild(label);
+      });
+    }
+
+    // ── Show count per category in sidebar ──────────────────────
+    async function populateCategoryCounts() {
+      const all = await ProductService.getAll();
+      const counts = { women: 0, men: 0, unisex: 0 };
+      all.forEach(p => { if (counts[p.category] !== undefined) counts[p.category]++; });
+      document.querySelectorAll('[data-count]').forEach(el => {
+        const cat = el.dataset.count;
+        if (counts[cat] !== undefined) el.textContent = `(${counts[cat]})`;
+      });
+    }
+
+    // ── Read URL query params and pre-check filters ─────────────
+    function readUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('category');
+      if (cat) {
+        const cb = document.querySelector(`input[name="category"][value="${cat}"]`);
+        if (cb) cb.checked = true;
+      }
+      const search = params.get('search');
+      if (search) {
+        // store for use during render
+        window._searchQuery = search;
+        // update page heading
+        const h1 = document.querySelector('.page-hero h1');
+        if (h1) h1.textContent = `Search: "${search}"`;
+      }
+      const sort = params.get('sort');
+      if (sort) {
+        const sel = document.getElementById('sortSelect');
+        if (sel) sel.value = sort;
+      }
+      const isNew = params.get('isNew');
+      if (isNew === 'true') window._filterNew = true;
+    }
+
+    // ── Gather current filter state ─────────────────────────────
+    function getFilters() {
+      const checked = (name) =>
+        [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el => el.value);
+
+      return {
+        categories:    checked('category'),
+        scentFamilies: checked('scentFamily'),
+        brands:        checked('brand'),
+        concentrations: checked('concentration'),
+        minPrice:      parseFloat(document.getElementById('priceMin')?.value) || undefined,
+        maxPrice:      parseFloat(document.getElementById('priceMax')?.value) || undefined,
+        inStockOnly:   document.getElementById('inStockOnly')?.checked || false,
+        bestsellersOnly: document.getElementById('bestsellersOnly')?.checked || false,
+        sortBy:        document.getElementById('sortSelect')?.value || 'default',
+      };
+    }
+
+    // ── Main render function ────────────────────────────────────
+    async function applyAndRender() {
+      const grid  = document.getElementById('productsGrid');
+      const empty = document.getElementById('emptyState');
+      const count = document.getElementById('productsCount');
+      if (!grid) return;
+
+      grid.innerHTML = '<div class="skeleton" style="height:400px;border-radius:8px"></div>'.repeat(6);
+      if (empty) empty.classList.add('hidden');
+
+      const filters = getFilters();
+      let products;
+
+      if (window._searchQuery) {
+        products = await ProductService.search(window._searchQuery);
+      } else {
+        products = await ProductService.filter({
+          categories:     filters.categories,
+          scentFamilies:  filters.scentFamilies,
+          brands:         filters.brands,
+          concentrations: filters.concentrations,
+          minPrice:       filters.minPrice,
+          maxPrice:       filters.maxPrice,
+          inStockOnly:    filters.inStockOnly,
+          sortBy:         filters.sortBy,
+        });
+      }
+
+      if (filters.bestsellersOnly) products = products.filter(p => p.isBestseller);
+      if (window._filterNew)       products = products.filter(p => p.isNew);
+
+      grid.innerHTML = '';
+      if (products.length === 0) {
+        if (empty) empty.classList.remove('hidden');
+        if (count) count.textContent = '0 fragrances';
+      } else {
+        products.forEach(p => grid.appendChild(renderProductCard(p)));
+        if (count) count.textContent = `${products.length} fragrance${products.length !== 1 ? 's' : ''}`;
+        animateCards(grid);
+      }
+
+      renderActiveChips(filters);
+      refreshScrollReveal();
+    }
+
+    // ── Active filter chips ─────────────────────────────────────
+    function renderActiveChips(filters) {
+      const bar = document.getElementById('activeFilterChips');
+      if (!bar) return;
+      bar.innerHTML = '';
+
+      const addChip = (label, onRemove) => {
+        const chip = document.createElement('span');
+        chip.style.cssText = 'display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.6rem;background:var(--color-gold);color:#fff;border-radius:999px;font-size:0.75rem;cursor:pointer';
+        chip.innerHTML = `${label} <span style="font-size:1rem;line-height:1">&times;</span>`;
+        chip.addEventListener('click', onRemove);
+        bar.appendChild(chip);
+      };
+
+      filters.categories.forEach(v => {
+        const labels = { women: 'For Her', men: 'For Him', unisex: 'Unisex' };
+        addChip(labels[v] || v, () => {
+          document.querySelector(`input[name="category"][value="${v}"]`).checked = false;
+          applyAndRender();
+        });
+      });
+      filters.scentFamilies.forEach(v => {
+        addChip(`Scent: ${v}`, () => {
+          document.querySelector(`input[name="scentFamily"][value="${v}"]`).checked = false;
+          applyAndRender();
+        });
+      });
+      filters.brands.forEach(v => {
+        addChip(v, () => {
+          document.querySelector(`input[name="brand"][value="${v}"]`).checked = false;
+          applyAndRender();
+        });
+      });
+      filters.concentrations.forEach(v => {
+        addChip(v, () => {
+          document.querySelector(`input[name="concentration"][value="${v}"]`).checked = false;
+          applyAndRender();
+        });
+      });
+      if (filters.inStockOnly) {
+        addChip('In Stock', () => { document.getElementById('inStockOnly').checked = false; applyAndRender(); });
+      }
+      if (filters.bestsellersOnly) {
+        addChip('Bestsellers', () => { document.getElementById('bestsellersOnly').checked = false; applyAndRender(); });
+      }
+      if (window._searchQuery) {
+        addChip(`"${window._searchQuery}"`, () => {
+          window._searchQuery = null;
+          document.querySelector('.page-hero h1').textContent = 'All Fragrances';
+          applyAndRender();
+        });
+      }
+    }
+
+    // ── Bind filter change events ───────────────────────────────
+    function bindFilterEvents() {
+      document.querySelectorAll('.filters-panel input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', applyAndRender);
+      });
+      document.getElementById('sortSelect')?.addEventListener('change', applyAndRender);
+
+      let priceTimer;
+      ['priceMin', 'priceMax'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', () => {
+          clearTimeout(priceTimer);
+          priceTimer = setTimeout(applyAndRender, 400);
+        });
+      });
+
+      document.getElementById('clearFilters')?.addEventListener('click', clearAllFilters);
+      document.getElementById('resetFiltersBtn')?.addEventListener('click', clearAllFilters);
+    }
+
+    function clearAllFilters() {
+      document.querySelectorAll('.filters-panel input[type="checkbox"]').forEach(cb => cb.checked = false);
+      const min = document.getElementById('priceMin'); if (min) min.value = '';
+      const max = document.getElementById('priceMax'); if (max) max.value = '';
+      const sort = document.getElementById('sortSelect'); if (sort) sort.value = 'default';
+      window._searchQuery = null;
+      window._filterNew = false;
+      document.querySelector('.page-hero h1').textContent = 'All Fragrances';
+      applyAndRender();
+    }
+
+    // ── Mobile filter panel toggle ──────────────────────────────
+    function bindMobileFilters() {
+      const panel  = document.getElementById('filtersPanel');
+      const toggle = document.getElementById('filtersToggle');
+      const mobileToggle = document.getElementById('filtersMobileToggle');
+      const applyBtn = document.getElementById('filtersApplyMobile');
+
+      const open  = () => { panel?.classList.add('open'); document.body.style.overflow = 'hidden'; if (applyBtn) applyBtn.style.display = 'block'; };
+      const close = () => { panel?.classList.remove('open'); document.body.style.overflow = ''; if (applyBtn) applyBtn.style.display = 'none'; };
+
+      toggle?.addEventListener('click', open);
+      mobileToggle?.addEventListener('click', open);
+      applyBtn?.addEventListener('click', () => { applyAndRender(); close(); });
+    }
   </script>
 </body>
 </html>

@@ -251,7 +251,128 @@
   <script src="js/main.js"></script>
   <script src="js/clover-api.js"></script>
   <script>
-  <!-- Business logic handled by js/ modules — source available upon request -->
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProduct();
+    });
+
+    async function loadProduct() {
+      const id = window.location.hash.slice(1);
+      const skeleton  = document.getElementById('productSkeleton');
+      const detail    = document.getElementById('productDetail');
+      const notFound  = document.getElementById('productNotFound');
+
+      if (!id) { skeleton?.remove(); notFound?.classList.remove('hidden'); return; }
+
+      const product = await CloverAPI.getProductById(id);
+
+      if (!product) {
+        skeleton?.remove();
+        notFound?.classList.remove('hidden');
+        return;
+      }
+
+      // Track recently viewed
+      RecentlyViewed.add(id);
+
+      // Populate fields
+      document.title = `${product.name} | Perfume Paradise`;
+      document.getElementById('breadcrumbName').textContent = product.name;
+      document.getElementById('productBrand').textContent = product.brand;
+      document.getElementById('productName').textContent = product.name;
+      document.getElementById('scentFamilyText').textContent =
+        product.scentFamily.charAt(0).toUpperCase() + product.scentFamily.slice(1) +
+        (product.concentration ? ` · ${product.concentration}` : '');
+
+      const stockTag = document.getElementById('productStockTag');
+      stockTag.textContent = product.inStock ? 'In Stock' : 'Sold Out';
+      stockTag.className = 'product-stock-tag ' + (product.inStock ? 'stock-in' : 'stock-out');
+
+      // Price
+      const priceEl = document.getElementById('productPrice');
+      priceEl.innerHTML = product.salePrice
+        ? `<span class="product-price-sale">${formatPrice(product.salePrice)}</span>
+           <span class="product-price-original">${formatPrice(product.price)}</span>`
+        : formatPrice(product.price);
+
+      document.getElementById('productDesc').textContent = product.description;
+
+      // Image
+      const img = document.getElementById('productMainImg');
+      img.src = product.image;
+      img.alt = product.name;
+
+      // Fragrance notes accordion
+      if (product.notes) {
+        document.getElementById('notesContent').innerHTML = `
+          <div style="display:grid;gap:0.6rem;font-size:0.88rem">
+            <div><strong style="color:var(--color-gold-light)">Top:</strong> ${product.notes.top || '—'}</div>
+            <div><strong style="color:var(--color-gold-light)">Heart:</strong> ${product.notes.middle || '—'}</div>
+            <div><strong style="color:var(--color-gold-light)">Base:</strong> ${product.notes.base || '—'}</div>
+          </div>`;
+      }
+
+      // Size selector
+      let selectedSize = product.sizes?.[product.sizes.length - 1];
+      const sizeOptions = document.getElementById('sizeOptions');
+      const selectedSizePrice = document.getElementById('selectedSizePrice');
+
+      if (product.sizes?.length) {
+        product.sizes.forEach((s, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'size-btn' + (i === product.sizes.length - 1 ? ' active' : '');
+          btn.textContent = s.size;
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedSize = s;
+            selectedSizePrice.textContent = formatPrice(s.price);
+          });
+          sizeOptions.appendChild(btn);
+        });
+        selectedSizePrice.textContent = formatPrice(selectedSize.price);
+      } else {
+        document.getElementById('sizeSelector').style.display = 'none';
+      }
+
+      // Add to cart
+      const addBtn = document.getElementById('addToCartBtn');
+      if (!product.inStock) {
+        addBtn.disabled = true;
+        addBtn.textContent = 'Sold Out';
+      } else {
+        addBtn.addEventListener('click', () => {
+          Cart.add(product, selectedSize?.size || null);
+          CartUI.open();
+          Toast.show(`${product.name} added to cart`);
+          updateShippingBar();
+        });
+      }
+
+      initAccordions(document.getElementById('productAccordion'));
+
+      // Show detail, hide skeleton
+      skeleton?.remove();
+      detail?.classList.remove('hidden');
+
+      // Related products
+      loadRelated(product);
+    }
+
+    async function loadRelated(product) {
+      const relatedGrid = document.getElementById('relatedGrid');
+      if (!relatedGrid) return;
+      let related = await ProductService.filter({ categories: [product.category] });
+      related = related.filter(p => p.id !== product.id).slice(0, 4);
+      if (related.length === 0) {
+        document.getElementById('relatedSection')?.remove();
+        return;
+      }
+      related.forEach(p => relatedGrid.appendChild(renderProductCard(p)));
+      animateCards(relatedGrid);
+      refreshScrollReveal();
+    }
   </script>
 </body>
 </html>
