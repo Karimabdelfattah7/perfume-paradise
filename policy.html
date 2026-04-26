@@ -250,7 +250,10 @@
   <script src="js/main.js"></script>
   <script src="js/clover-api.js"></script>
   <script>
-  <!-- Business logic handled by js/ modules — source available upon request -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.addEventListener('DOMContentLoaded', initAnnouncementBar);
+  </script>
   </script>
 </body>
 </html>

@@ -269,7 +269,140 @@
   <script src="js/main.js"></script>
   <script src="js/clover-api.js"></script>
   <script>
-  <!-- Business logic handled by js/ modules — source available upon request -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initCheckout();
+    });
+
+    function initCheckout() {
+      const items = Cart.getItems ? Cart.getItems() : [];
+      const section = document.getElementById('checkoutSection');
+      const emptyMsg = document.getElementById('emptyCartMsg');
+
+      if (!items || items.length === 0) {
+        section?.classList.add('hidden');
+        emptyMsg?.classList.remove('hidden');
+        return;
+      }
+
+      renderOrderSummary(items);
+      bindDeliveryToggle();
+      bindFormSubmit(items);
+    }
+
+    function renderOrderSummary(items) {
+      const orderItems = document.getElementById('orderItems');
+      const subtotalEl = document.getElementById('summarySubtotal');
+      const totalEl    = document.getElementById('summaryTotal');
+      if (!orderItems) return;
+
+      let subtotal = 0;
+      orderItems.innerHTML = '';
+      items.forEach(item => {
+        const lineTotal = (item.salePrice || item.price) * item.qty;
+        subtotal += lineTotal;
+        const div = document.createElement('div');
+        div.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;padding:0.75rem 0;border-bottom:1px solid var(--color-border-light);font-size:0.88rem;gap:0.5rem';
+        div.innerHTML = `
+          <div>
+            <div style="font-weight:500">${item.name}</div>
+            <div style="color:var(--color-text-muted);font-size:0.78rem">${item.brand}${item.size ? ' · ' + item.size : ''} × ${item.qty}</div>
+          </div>
+          <div style="white-space:nowrap">${formatPrice(lineTotal)}</div>`;
+        orderItems.appendChild(div);
+      });
+
+      const shipping = subtotal >= 150 ? 'Free' : 'TBD';
+      if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
+      if (totalEl)    totalEl.textContent    = formatPrice(subtotal);
+      const shippingEl = document.getElementById('summaryShipping');
+      if (shippingEl) shippingEl.textContent = shipping;
+    }
+
+    function bindDeliveryToggle() {
+      const radios = document.querySelectorAll('input[name="delivery"]');
+      const shippingAddr = document.getElementById('shippingAddress');
+      radios.forEach(r => {
+        r.addEventListener('change', () => {
+          if (r.value === 'shipping' && r.checked) {
+            shippingAddr?.classList.remove('hidden');
+          } else if (r.value === 'pickup' && r.checked) {
+            shippingAddr?.classList.add('hidden');
+          }
+        });
+      });
+    }
+
+    function bindFormSubmit(items) {
+      const form = document.getElementById('checkoutForm');
+      if (!form) return;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!validateForm()) return;
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = 'Placing Order…';
+
+        const delivery = document.querySelector('input[name="delivery"]:checked')?.value;
+        const customer = {
+          firstName: document.getElementById('firstName').value.trim(),
+          lastName:  document.getElementById('lastName').value.trim(),
+          email:     document.getElementById('email').value.trim(),
+          phone:     document.getElementById('phone').value.trim(),
+          delivery,
+        };
+
+        const cartOrder = { items, delivery };
+        const result = await CloverAPI.createOrder(cartOrder, customer);
+
+        sessionStorage.setItem('pp_order', JSON.stringify({
+          orderId:  result.orderId,
+          email:    customer.email,
+          delivery,
+          items,
+          subtotal: Cart.getSubtotal ? Cart.getSubtotal() : 0,
+        }));
+
+        Cart.clear && Cart.clear();
+        window.location.href = 'confirmation.html';
+      });
+    }
+
+    function validateForm() {
+      let valid = true;
+      const required = [
+        { id: 'firstName', errId: 'firstNameErr' },
+        { id: 'lastName',  errId: 'lastNameErr'  },
+        { id: 'email',     errId: 'emailErr'     },
+      ];
+      const delivery = document.querySelector('input[name="delivery"]:checked')?.value;
+      if (delivery === 'shipping') {
+        required.push(
+          { id: 'address', errId: 'addressErr' },
+          { id: 'city',    errId: 'cityErr'    },
+          { id: 'zip',     errId: 'zipErr'     },
+        );
+      }
+      required.forEach(({ id, errId }) => {
+        const el  = document.getElementById(id);
+        const err = document.getElementById(errId);
+        const empty = !el?.value.trim();
+        const emailInvalid = id === 'email' && el?.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value);
+        if (empty || emailInvalid) {
+          el?.classList.add('input-error');
+          err?.classList.remove('hidden');
+          valid = false;
+        } else {
+          el?.classList.remove('input-error');
+          err?.classList.add('hidden');
+        }
+      });
+      return valid;
+    }
+  </script>
   </script>
 </body>
 </html>
