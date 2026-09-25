@@ -53,6 +53,47 @@ python -m http.server 8080
 
 ---
 
+## Clover POS Integration
+
+The site is pre-wired for **Clover** payments and inventory sync. See [`CLOVER-SETUP-GUIDE.md`](CLOVER-SETUP-GUIDE.md) for the full step-by-step.
+
+**Current state:** `js/clover-api.js` is a stub layer. All methods return local sample data. To go live:
+
+1. Fill in `CloverConfig.MERCHANT_ID` and `CloverConfig.API_TOKEN`
+2. Set `ENV: 'production'`
+3. Uncomment the real `fetch()` calls in each method
+4. Build a backend proxy (Node/PHP) so credentials stay server-side
+5. Replace `CloverAPI.initPaymentForm()` stub with real Clover iframe
+
+---
+
+## File Structure
+
+```
+perfume-paradise/
+├── index.html              Homepage
+├── products.html           Full catalog + filters
+├── product.html            Product detail page
+├── checkout.html           Order form
+├── confirmation.html       Post-order screen
+├── policy.html             Store info & return policy
+├── css/
+│   └── styles.css          Entire design system + animation system
+├── js/
+│   ├── data.js             Product data + ProductService
+│   ├── cart.js             Cart + CartUI
+│   ├── main.js             Shared UI + all animations
+│   └── clover-api.js       Clover integration stub
+├── assets/
+│   ├── favicon.svg
+│   └── images/
+│       └── storefront-reference.jpg
+├── CLOVER-SETUP-GUIDE.md   Credentials + go-live checklist
+└── README.md               This file
+```
+
+---
+
 ## Animation System
 
 All motion is handled in `css/styles.css` (section 37) and `js/main.js`.
@@ -90,75 +131,13 @@ Every card rendered by `renderProductCard()` gets `product-card-enter`. After a 
 
 ---
 
-## Bug Fixed — Products Not Loading
+## Store Information
 
-### Symptom
-Opening `index.html` showed only skeleton placeholders. Products never appeared, even with internet. Refreshing, restarting the browser, and reconnecting to the internet made no difference.
+**Perfume Paradise**  
+Mall St. Mathews  
+Louisville, Kentucky
 
-### Root Cause
-Every HTML page had this script block at the bottom:
-
-```html
-<script>
-<!-- Business logic handled by js/ modules — source available upon request -->
-</script>
-```
-
-An HTML comment (`<!-- -->`) inside a `<script>` tag is treated as JavaScript, not as a comment — and it's a syntax no-op. **No initialization code ever ran.** The product grids had skeleton `<div>` placeholders, but nothing replaced them with real cards.
-
-The product data lives entirely in `js/data.js` (a local JS array). There is **zero network dependency** for product display. The bug had nothing to do with internet connectivity.
-
-### Fix (applied 2026-04-26)
-Replaced the empty script block in every page with real initialization code:
-
-| Page | What was added |
-|------|----------------|
-| `index.html` | `loadHomepageProducts()` fills all 5 grids from `ProductService`; calls `initTabs`, `initScentQuiz`, `initNewsletter`, `initAnnouncementBar` |
-| `products.html` | Full filter engine, brand list population, URL param reading, active filter chips, sort, mobile filter panel |
-| `product.html` | Product load by URL hash, size selector, add-to-cart, accordion init, related products, recently viewed |
-| `checkout.html` | Cart render, delivery toggle, form validation, order submit via `CloverAPI.createOrder()` |
-| `confirmation.html` | Reads order from `sessionStorage`, renders itemized summary and next-steps |
-| `policy.html` | Footer year + announcement bar |
-
----
-
-## Clover POS Integration
-
-The site is pre-wired for **Clover** payments and inventory sync. See [`CLOVER-SETUP-GUIDE.md`](CLOVER-SETUP-GUIDE.md) for the full step-by-step.
-
-**Current state:** `js/clover-api.js` is a stub layer. All methods return local sample data. To go live:
-
-1. Fill in `CloverConfig.MERCHANT_ID` and `CloverConfig.API_TOKEN`
-2. Set `ENV: 'production'`
-3. Uncomment the real `fetch()` calls in each method
-4. Build a backend proxy (Node/PHP) so credentials stay server-side
-5. Replace `CloverAPI.initPaymentForm()` stub with real Clover iframe
-
----
-
-## File Structure
-
-```
-perfume-paradise/
-├── index.html              Homepage
-├── products.html           Full catalog + filters
-├── product.html            Product detail page
-├── checkout.html           Order form
-├── confirmation.html       Post-order screen
-├── policy.html             Store info & return policy
-├── css/
-│   └── styles.css          Entire design system + animation system
-├── js/
-│   ├── data.js             Product data + ProductService
-│   ├── cart.js             Cart + CartUI
-│   ├── main.js             Shared UI + all animations
-│   └── clover-api.js       Clover integration stub
-├── assets/
-│   ├── favicon.svg
-│   └── images/             (add real product photos here)
-├── CLOVER-SETUP-GUIDE.md   Credentials + go-live checklist
-└── README.md               This file
-```
+Return & exchange policy: 15 days with original receipt.
 
 ---
 
@@ -200,10 +179,32 @@ perfume-paradise/
 
 ---
 
-## Store Information
+## Bug Fixed — Products Not Loading
 
-**Perfume Paradise**  
-Mall St. Mathews  
-Louisville, Kentucky
+### Symptom
+Opening `index.html` showed only skeleton placeholders. Products never appeared, even with internet. Refreshing, restarting the browser, and reconnecting to the internet made no difference.
 
-Return & exchange policy: 15 days with original receipt.
+### Root Cause
+Every HTML page had this script block at the bottom:
+
+```html
+<script>
+<!-- Business logic handled by js/ modules — source available upon request -->
+</script>
+```
+
+An HTML comment (`<!-- -->`) inside a `<script>` tag is treated as JavaScript, not as a comment — and it's a syntax no-op. **No initialization code ever ran.** The product grids had skeleton `<div>` placeholders, but nothing replaced them with real cards.
+
+The product data lives entirely in `js/data.js` (a local JS array). There is **zero network dependency** for product display. The bug had nothing to do with internet connectivity.
+
+### Fix (applied 2026-04-26)
+Replaced the empty script block in every page with real initialization code:
+
+| Page | What was added |
+|------|----------------|
+| `index.html` | `loadHomepageProducts()` fills all 5 grids from `ProductService`; calls `initTabs`, `initScentQuiz`, `initNewsletter`, `initAnnouncementBar` |
+| `products.html` | Full filter engine, brand list population, URL param reading, active filter chips, sort, mobile filter panel |
+| `product.html` | Product load by URL hash, size selector, add-to-cart, accordion init, related products, recently viewed |
+| `checkout.html` | Cart render, delivery toggle, form validation, order submit via `CloverAPI.createOrder()` |
+| `confirmation.html` | Reads order from `sessionStorage`, renders itemized summary and next-steps |
+| `policy.html` | Footer year + announcement bar |
